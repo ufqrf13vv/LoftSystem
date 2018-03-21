@@ -1,0 +1,19 @@
+{
+  "name": "LoftSystem",
+  "version": "0.0.1",
+  "licanse": "MIT",
+  "private": true,
+  "scripts": {
+    "exp-dev": "nodemon express.js",
+    "koa-dev": "nodemon koa.js",
+    "express": "node express.js",
+    "koa": "node koa.js"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "formidable": "^1.2.0",
+    "pg": "^7.4.1",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.37.3"
+  }
+}
