@@ -1,0 +1,10 @@
+{
+    "sequelize": {
+        "dbName": "loft",
+        "host": "localhost",
+        "password": "0129"
+    },
+    "mongo": {
+
+    }
+}

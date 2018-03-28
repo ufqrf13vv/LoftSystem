@@ -1,18 +1,18 @@
 const News = require('../../models/sql/news.js');
 
-exports.getNews = () => {
+exports.getNews = (req, res) => {
     News.getAllNews();
 };
 
-exports.newNews = () => {
+exports.newNews = (req, res) => {
     //News.addNews();
 };
 
-exports.updateNews = () => {
+exports.updateNews = (req, res) => {
 
 };
 
-exports.deleteNews = () => {
+exports.deleteNews = (req, res) => {
 
 };
 

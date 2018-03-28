@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const news = require('../controllers/express/news.js');
+const users = require('../controllers/express/users.js');
 
 //  Users
 router.get('/api/getUsers', news.getNews);
-router.post('/api/saveNewUser');
-router.post('/api/login');
+router.post('/api/saveNewUser', users.createUser);
+router.post('/api/login', users.login);
 router.post('/api/authFromToken');
 router.put('/api/updateUser/:id');
 router.delete('/api/deleteUser/:id');

@@ -10,6 +10,8 @@
     "koa": "node koa.js"
   },
   "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
     "express": "^4.16.3",
     "formidable": "^1.2.0",
     "pg": "^7.4.1",

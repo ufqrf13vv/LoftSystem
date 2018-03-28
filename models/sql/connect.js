@@ -1,6 +1,8 @@
+const config = require('../../config.json');
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('loft', 'postgres', '0129', {
-    host: 'localhost',
+
+const sequelize = new Sequelize(config.sequelize.dbName, 'postgres', config.sequelize.password, {
+    host: config.sequelize.host,
     dialect: 'postgres',
     pool: {
         max: 5,

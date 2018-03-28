@@ -5,7 +5,7 @@ const News = sequelize.define('news', {
     theme: {
         type: Sequelize.STRING
     },
-    news_text: {
+    newsText: {
         type: Sequelize.TEXT
     },
     author: {
@@ -14,9 +14,9 @@ const News = sequelize.define('news', {
     }
 });
 
-(function () {
-    News.sync({force: false});
-})();
+//(function () {
+//    News.sync({force: true});
+//})();
 
 exports.getAllNews = () => {
     News.findAll().then(result => {
