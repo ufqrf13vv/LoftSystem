@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./connect');
+const helper = require('../../helper/helper.js');
 
 const User = sequelize.define('users', {
     username: {
@@ -19,12 +20,15 @@ const User = sequelize.define('users', {
     middleName: {
         type: Sequelize.STRING
     },
-    img: {
+    image: {
         type: Sequelize.STRING
     },
     permission: {
         type: Sequelize.JSON,
         allowNull: false
+    },
+    permissionId: {
+        type: Sequelize.INTEGER
     },
     access_token: {
         type: Sequelize.STRING
@@ -40,74 +44,28 @@ User.associate = models => {
 };
 
 exports.saveUser = data => {
-    User.create({
-            username: data.username,
-            password: data.password,
-            firstName: data.firstName,
-            surName: data.surName,
-            middleName: data.middleName,
-            img: data.img,
-            permission: {
-                chat: {
-                    C: true,
-                    R: true,
-                    U: true,
-                    D: true
-                },
-                news: {
-                    C: true,
-                    R: true,
-                    U: true,
-                    D: true
-                },
-                setting: {
-                    C: true,
-                    R: true,
-                    U: true,
-                    D: true
-                }
-            },
-            access_token: ''
-        })
-        .then(result => {
-            console.log(result);
-        });
+    return User.create({
+        username: data.username,
+        password: helper.encryptPassword(data.password),
+        firstName: data.firstName,
+        surName: data.surName,
+        middleName: data.middleName,
+        image: data.img,
+        permission: data.permission,
+        permissionId: null,
+        access_token: ''
+    });
 };
 
-exports.loginUser = data => {
-    User.findOne({
-            where: {
-                userName: data.username,
-                password: data.password
-            }
-        })
-        .then(result => {
-            console.log(result);
-        });
+exports.findUser = name => {
+    return User.findOne({
+        where: {
+            username: name
+        }
+    });
 };
-
-exports.findUser = data => {
-    User.findOne({
-            order: [
-                ['userName']
-            ],
-            where: {
-                userName: data.username
-            }
-        })
-        .then(result => {
-            console.log(result.count);
-        });
-};
-
-//exports.findUsers = async () => {
-//    let result = await User.findAll();
-//    return result;
-//};
 
 exports.findUsers = () => {
-    //let result = await User.findAll();
-    //console.log(result)
     return User.findAll();
 };
 

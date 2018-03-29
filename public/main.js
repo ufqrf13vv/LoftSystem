@@ -5383,7 +5383,7 @@ Observer.prototype.observeArray = function observeArray (items) {
   }
 };
 
-// helpers
+// helper
 
 /**
  * Augment an target Object or Array by intercepting
@@ -8258,7 +8258,7 @@ function renderMixin (Vue) {
     return vnode
   };
 
-  // internal render helpers.
+  // internal render helper.
   // these are exposed on the instance prototype to reduce generated render
   // code size.
   Vue.prototype._o = markOnce;
@@ -14430,7 +14430,7 @@ function encodeBase64Object(packet, callback) {
 }
 
 /**
- * Encode packet helpers for binary types
+ * Encode packet helper for binary types
  */
 
 function encodeArrayBuffer(packet, supportsBinary, callback) {

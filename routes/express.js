@@ -4,7 +4,7 @@ const news = require('../controllers/express/news.js');
 const users = require('../controllers/express/users.js');
 
 //  Users
-router.get('/api/getUsers', news.getNews);
+router.get('/api/getUsers', users.getUsers);
 router.post('/api/saveNewUser', users.createUser);
 router.post('/api/login', users.login);
 router.post('/api/authFromToken');
