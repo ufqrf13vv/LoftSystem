@@ -1,16 +1,23 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+const jwt = require('jwt-simple');
+const secret = 'token';
 
-//  Шифрование пароля
-exports.encryptPassword = password => bcrypt.hashSync(password, 10);
+exports.encryptPassword = password => bcrypt.hashSync(password, 0, null);
 
-//  Сравнение паролей
 exports.checkPassword = (recPassword, enterPassword) => bcrypt.compareSync(enterPassword, recPassword);
 
-//  Установка куки
 exports.setCookie = (res, cookieKey, data) => {
     res.cookie(cookieKey, data, {
         maxAge: ((((1000 * 60) * 60) * 24) * 7),
         path: '/',
         httpOnly: true
     });
+};
+
+exports.encodeJWT = data => {
+    return jwt.encode({ id: data.id }, secret);
+};
+
+exports.decodeJWT = token => {
+    return jwt.encode(token, secret);
 };

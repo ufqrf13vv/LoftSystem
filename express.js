@@ -27,6 +27,8 @@ app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/', index);
+
 app.get('*', function(req, res) {
     res.send(fs.readFileSync(path.resolve(path.join('public', 'index.html')), 'utf8'));
 });

@@ -65,8 +65,28 @@ exports.findUser = name => {
     });
 };
 
+exports.findUserById = id => {
+    return User.findById(id);
+};
+
 exports.findUsers = () => {
     return User.findAll();
+};
+
+exports.updateUser = (id) => {
+    User.update({OwnerId: peopleInfo.newuser},
+        {where: {id: peopleInfo.scenario.id}})
+        .then(function (result) {
+            models.People.findById(peopleInfo.scenario.id)
+        });
+};
+
+exports.deleteUser = (id) => {
+    User.destroy({
+        where: {
+            id: id
+        }
+    });
 };
 
 module.export = User;
