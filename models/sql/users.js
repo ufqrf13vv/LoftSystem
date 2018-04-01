@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('./connect');
 const helper = require('../../helper/helper.js');
 
-const User = sequelize.define('users', {
+const User = sequelize.define('user', {
     username: {
         type: Sequelize.STRING,
         allowNull: false
@@ -73,15 +73,16 @@ exports.findUsers = () => {
     return User.findAll();
 };
 
-exports.updateUser = (id) => {
-    User.update({OwnerId: peopleInfo.newuser},
-        {where: {id: peopleInfo.scenario.id}})
-        .then(function (result) {
-            models.People.findById(peopleInfo.scenario.id)
+exports.updateUser = (id, updateData) => {
+    return User.update(updateData,
+        {
+            where: {
+                id: id
+            }
         });
 };
 
-exports.deleteUser = (id) => {
+exports.deleteUser = id => {
     User.destroy({
         where: {
             id: id

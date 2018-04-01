@@ -14,8 +14,8 @@ exports.setCookie = (res, cookieKey, data) => {
     });
 };
 
-exports.encodeJWT = data => {
-    return jwt.encode({ id: data.id }, secret);
+exports.encodeJWT = id => {
+    return jwt.encode({ id: id }, secret);
 };
 
 exports.decodeJWT = token => {

@@ -20,14 +20,15 @@ exports.createUser = async (req, res) => {
     const user = await User.saveUser(req.body);
     const accessToken = helper.encodeJWT(user.id);
 
-    await user.update({access_token: accessToken, permissionId: user.id});
-    req.session.accessToken = accessToken;
+    await User.updateUser(user.id, {access_token: accessToken, permissionId: user.id});
+    const updateUser = await User.findUserById(user.id);
 
-    res.send(user);
+    req.session.accessToken = accessToken;
+    res.send(updateUser);
 };
 
 exports.login = async (req, res) => {
-    const { username, password, remembered } = req.body;
+    const { username, password } = req.body;
     const user = await User.findUser(username);
     const accessToken = user.access_token;
 
@@ -37,7 +38,7 @@ exports.login = async (req, res) => {
         return res.send({error: 'Не верный пароль!'});
     }
 
-    if (remembered) {
+    if (req.body.remembered) {
         helper.setCookie(res, 'access_token', accessToken);
     }
 
@@ -45,9 +46,9 @@ exports.login = async (req, res) => {
 };
 
 exports.authFromToken = async (req, res) => {
-    const accessToken = req.body.access_token;
+    let accessToken = req.body.access_token;
 
-    console.log(accessToken)
+    res.send(accessToken)
 };
 
 exports.updateUser = async (req, res) => {
@@ -65,8 +66,10 @@ exports.updateUser = async (req, res) => {
         data.password = helper.encryptPassword(req.body.password, user.password);
     }
 
-    await user.update(data);
-    res.send(user);
+    await User.updateUser(req.body.id, data);
+    const updateUser = await User.findUserById(req.body.id);
+
+    res.send(updateUser);
 };
 
 exports.saveUserImage = async (req, res) => {
@@ -100,14 +103,29 @@ exports.saveUserImage = async (req, res) => {
         const filePath = path.join('images', 'upload', files[id]['name']);
         const user = await User.findUserById(id);
 
-        await user.update({image: filePath});
+        await User.updateUser(id, {image: filePath});
+        const updateUser = await User.findUserById(id);
 
-        res.send(user);
+        res.send(updateUser);
     });
 };
 
 exports.updateUserPermission = async (req, res) => {
+    const user = await User.findUserById(req.body.permissionId);
 
+    if (!user) return res.status(400).send({error: 'Пользователь не найден!'});
+
+    const newPermissions = req.body.permission;
+    const oldPermissions = user.permission;
+
+    for (const permissionName in newPermissions) {
+        if (!newPermissions.hasOwnProperty(permissionName)) continue;
+        Object.assign(oldPermissions[permissionName], newPermissions[permissionName]);
+    }
+
+    await User.updateUser(user.id, {permission: oldPermissions});
+
+    res.send({status: 'ok'});
 };
 
 exports.deleteUser = async (req, res) => {
