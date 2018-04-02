@@ -1,3 +1,5 @@
+const path = require('path');
+const fs = require('fs');
 const config = require('../../config.json');
 const Sequelize = require('sequelize');
 
@@ -14,6 +16,17 @@ const sequelize = new Sequelize(config.sequelize.dbName, 'postgres', config.sequ
 sequelize
     .authenticate()
     .then(() => {
+        const modelNames = ['users', 'news'];
+
+        for (const modelName of modelNames) {
+            sequelize.import(`./${modelName}.js`);
+        }
+
+        for (const modelName of Object.keys(sequelize.models)) {
+            if ('associate' in sequelize.models[modelName]) {
+                sequelize.models[modelName].associate(sequelize.models);
+            }
+        }
         console.log('Соединение установлено.');
     })
     .catch(err => {

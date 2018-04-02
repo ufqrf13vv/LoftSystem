@@ -1,3 +1,4 @@
+//const sequelize = require('./connect');
 const News = require('../../models/sql/news.js');
 
 exports.getNews = async (req, res) => {
