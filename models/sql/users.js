@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
         User.sync({force: false});
     })();
 
-    User.prototype.saveUser = data => {
+    User.saveUser = data => {
         return User.create({
             username: data.username,
             password: helper.encryptPassword(data.password),
@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
         });
     };
 
-    User.prototype.findUser = name => {
+    User.findUser = name => {
         return User.findOne({
             where: {
                 username: name
@@ -66,15 +66,15 @@ module.exports = (sequelize, DataTypes) => {
         });
     };
 
-    User.prototype.findUserById = id => {
+    User.findUserById = id => {
         return User.findById(id);
     };
 
-    User.prototype.findUsers = () => {
+    User.findUsers = () => {
         return User.findAll();
     };
 
-    User.prototype.updateUser = (id, updateData) => {
+    User.updateUser = (id, updateData) => {
         return User.update(updateData,
             {
                 where: {
@@ -83,12 +83,17 @@ module.exports = (sequelize, DataTypes) => {
             });
     };
 
-    User.prototype.deleteUser = id => {
+    User.deleteUser = id => {
         User.destroy({
             where: {
                 id: id
             }
         });
+    };
+
+    User.fn = () => {
+        let a = 10;
+        return a;
     };
 
     return User;

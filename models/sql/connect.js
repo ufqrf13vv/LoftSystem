@@ -27,6 +27,20 @@ sequelize
                 sequelize.models[modelName].associate(sequelize.models);
             }
         }
+        //fs
+        //    .readdirSync('./models/sql')
+        //.filter(function(file) {
+        //    return (file.indexOf('.') !== 0) && (file !== 'connect.js');
+        //})
+        //    .forEach(function(file) {
+        //        sequelize.import(path.join(__dirname, file));
+        //    });
+        //
+        //Object.keys(sequelize.models).forEach(function(modelName) {
+        //    if ('associate' in sequelize.models[modelName]) {
+        //        sequelize.models[modelName].associate(sequelize);
+        //    }
+        //});
         console.log('Соединение установлено.');
     })
     .catch(err => {

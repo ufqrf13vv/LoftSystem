@@ -26,11 +26,11 @@ module.exports = (sequelize, DataTypes) => {
         News.sync({force: false});
     })();
 
-    News.prototype.getAllNews = () => {
+    News.getAllNews = () => {
         return News.findAll();
     };
 
-    News.prototype.addNews = data => {
+    News.addNews = data => {
         return News.create({
             theme: data.theme,
             text: data.text,
@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
         });
     };
 
-    News.prototype.updateNews = (data, id) => {
+    News.updateNews = (data, id) => {
         return News.update(data,
             {
                 where: {
@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
             });
     };
 
-    News.prototype.deleteNews = id => {
+    News.deleteNews = id => {
         News.destroy({
             where: {
                 id: id

@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const express = require('express');
 const app = express();
+const server = require('http').createServer(app);
+const chat = require('./controllers/chat.js');
 const index = require('./routes/express');
 
 app.use(bodyParser.json({ type: 'text/plain' }));
@@ -29,8 +31,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 
-app.get('*', function(req, res) {
+app.get('*', (req, res) => {
     res.send(fs.readFileSync(path.resolve(path.join('public', 'index.html')), 'utf8'));
 });
 
-app.listen(4000);
+chat(server);
+server.listen(4000);

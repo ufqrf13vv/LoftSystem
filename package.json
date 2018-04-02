@@ -19,6 +19,7 @@
     "jwt-simple": "^0.5.1",
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.37.3"
+    "sequelize": "^4.37.3",
+    "socket.io": "^2.1.0"
   }
 }

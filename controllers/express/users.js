@@ -2,7 +2,8 @@ const formidable = require('formidable');
 const path = require('path');
 const fs = require('fs');
 const helper = require('../../helper/helper.js');
-const User = require('../../models/sql/users.js');
+const sequelize = require('../../models/sql/connect.js');
+const User = require('../../models/sql/users.js')(sequelize);
 
 exports.getUsers = async (req, res) => {
     const allUsers = await User.findUsers();
