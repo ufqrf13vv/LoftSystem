@@ -18,16 +18,18 @@ module.exports = (sequelize, DataTypes) => {
         }
     });
 
-    News.associate = models => {
-        News.belongsTo(models.user, {foreignKey: 'userId', targetKey: 'id'});
-    };
-
-    (function () {
-        News.sync({force: false});
-    })();
+    //News.associate = models => {
+    //    News.belongsTo(models.user, {foreignKey: 'userId', targetKey: 'id'});
+    //};
+    //
+    //(function () {
+    //    News.sync({force: false});
+    //})();
 
     News.getAllNews = () => {
-        return News.findAll();
+        return sequelize.query("SELECT * FROM news" +
+                                " LEFT JOIN users" +
+                                " ON users.id = news.userId");
     };
 
     News.addNews = data => {

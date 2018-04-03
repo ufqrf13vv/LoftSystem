@@ -1,10 +1,12 @@
 {
-    "sequelize": {
+    "SQL": {
         "dbName": "loft",
         "host": "localhost",
-        "password": "0129"
+        "user": "postgres",
+        "password": "0129",
+        "dialect": "postgres"
     },
-    "mongo": {
+    "MongoDB": {
 
     }
 }

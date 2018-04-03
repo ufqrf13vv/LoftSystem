@@ -3,6 +3,7 @@ const News = require('../../models/sql/news.js')(sequelize);
 
 exports.getNews = async (req, res) => {
     const allNews = await News.getAllNews();
+    console.log(allNews)
     res.send(allNews);
 };
 

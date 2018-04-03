@@ -36,13 +36,13 @@ module.exports = (sequelize, DataTypes) => {
         }
     });
 
-    User.associate = models => {
-        User.hasMany(models.news);
-    };
-
-    (function () {
-        User.sync({force: false});
-    })();
+    //User.associate = models => {
+    //    User.hasMany(models.news);
+    //};
+    //
+    //(function () {
+    //    User.sync({force: false});
+    //})();
 
     User.saveUser = data => {
         return User.create({

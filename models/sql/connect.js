@@ -3,9 +3,9 @@ const fs = require('fs');
 const config = require('../../config.json');
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize(config.sequelize.dbName, 'postgres', config.sequelize.password, {
-    host: config.sequelize.host,
-    dialect: 'postgres',
+const sequelize = new Sequelize(config.SQL.dbName, config.SQL.user, config.SQL.password, {
+    host: config.SQL.host,
+    dialect: config.SQL.dialect,
     pool: {
         max: 5,
         min: 0,
