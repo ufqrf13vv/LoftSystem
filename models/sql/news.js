@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('./connect');
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = sequelize => {
     const News = sequelize.define('news', {
         theme: {
             type: Sequelize.STRING
@@ -18,18 +18,20 @@ module.exports = (sequelize, DataTypes) => {
         }
     });
 
-    //News.associate = models => {
-    //    News.belongsTo(models.user, {foreignKey: 'userId', targetKey: 'id'});
-    //};
+    News.associate = models => {
+        News.belongsTo(models.user, {foreignKey: 'userId', targetKey: 'id'});
+    };
     //
     //(function () {
     //    News.sync({force: false});
     //})();
 
     News.getAllNews = () => {
-        return sequelize.query("SELECT * FROM news" +
-                                " LEFT JOIN users" +
-                                " ON users.id = news.userId");
+        return News.findAll({
+            include: [
+                { model: sequelize.models.user }
+            ]
+        })
     };
 
     News.addNews = data => {

@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('./connect');
 const helper = require('../../helper/helper.js');
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = sequelize => {
     const User = sequelize.define('user', {
         username: {
             type: Sequelize.STRING,
@@ -36,9 +36,9 @@ module.exports = (sequelize, DataTypes) => {
         }
     });
 
-    //User.associate = models => {
-    //    User.hasMany(models.news);
-    //};
+    User.associate = models => {
+        User.hasMany(models.news);
+    };
     //
     //(function () {
     //    User.sync({force: false});
