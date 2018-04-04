@@ -1,27 +1,33 @@
-const sequelize = require('../../models/sql/connect.js');
+const sequelize = require('../../models/sql/connect');
 const News = require('../../models/sql/news.js')(sequelize);
 
+function getAllNews() {
+    return sequelize.models.news.findAll({include: [sequelize.models.user]});
+}
+
 exports.getNews = async (req, res) => {
-    const allNews = await News.getAllNews();
-    console.log(allNews)
+    const allNews = await getAllNews();
+
     res.send(allNews);
 };
 
 exports.newNews = async (req, res) => {
     await News.addNews(req.body);
-    const allNews = await News.getAllNews();
+    const allNews = await getAllNews();
 
     res.send(allNews);
 };
 
 exports.updateNews = async (req, res) => {
+    await News.updateNews(req.body, req.body.id);
+    const allNews = await getAllNews();
 
+    res.send(allNews);
 };
 
 exports.deleteNews = async (req, res) => {
-    console.log(req.body)
-    //await News.deleteNews(req.body.id);
-    const allNews = await News.getAllNews();
+    await News.deleteNews(req.params.id);
+    const allNews = await getAllNews();
 
     res.send(allNews);
 };

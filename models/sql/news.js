@@ -21,7 +21,7 @@ module.exports = sequelize => {
     News.associate = models => {
         News.belongsTo(models.user, {foreignKey: 'userId', targetKey: 'id'});
     };
-    //
+
     //(function () {
     //    News.sync({force: false});
     //})();

@@ -24,11 +24,10 @@ exports.createUser = async (req, res) => {
     await User.updateUser(user.id, {access_token: accessToken, permissionId: user.id});
     const updateUser = await User.findUserById(user.id);
 
-    req.session.accessToken = accessToken;
     res.send(updateUser);
 };
 
-exports.login = async (req, res) => {
+exports.loginUser = async (req, res) => {
     const { username, password } = req.body;
     const user = await User.findUser(username);
     const accessToken = user.access_token;
@@ -40,16 +39,22 @@ exports.login = async (req, res) => {
     }
 
     if (req.body.remembered) {
-        helper.setCookie(res, 'access_token', accessToken);
+        await res.cookie('access_token', accessToken);
     }
 
     await res.send(user);
 };
 
 exports.authFromToken = async (req, res) => {
-    let accessToken = req.body.access_token;
+    let decodedToken = helper.decodeJWT(req.body.access_token);
 
-    res.send(accessToken)
+    if (!decodedToken) return res.status(400).send({error: 'Невозможно раскодировать токен!'});
+
+    const user = await User.findUserById(decodedToken.id);
+
+    if (!user) return res.status(400).send({error: 'Пользователь не найден!'});
+
+    res.send(user);
 };
 
 exports.updateUser = async (req, res) => {

@@ -20,8 +20,8 @@ sequelize
         const modelFileNamesArray = ['users', 'news'];
 
         modelFileNamesArray.forEach((modelFileName) => {
-            const Model = sequelize.import(path.join(__dirname, modelFileName));
-            models[Model.name] = Model;
+            const model = sequelize.import(path.join(__dirname, modelFileName));
+            models[model.name] = model;
         });
 
         Object.keys(models).forEach((modelName) => {
