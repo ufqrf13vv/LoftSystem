@@ -6,7 +6,7 @@
   "scripts": {
     "exp-dev": "nodemon express.js",
     "koa-dev": "nodemon koa.js",
-    "express": "node express.js",
+    "express": "node_modules/.bin/sequelize db:create || node_modules/.bin/sequelize db:migrate && node express.js",
     "koa": "node koa.js"
   },
   "dependencies": {
@@ -25,6 +25,7 @@
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.37.3",
+    "sequelize-cli": "^4.0.0",
     "socket.io": "^2.1.0"
   }
 }

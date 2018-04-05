@@ -1,11 +1,11 @@
 const path = require('path');
 const fs = require('fs');
-const config = require('../../config.json');
+const config = require('../../config/config.json');
 const Sequelize = require('sequelize');
 
-const sequelize = new Sequelize(config.SQL.dbName, config.SQL.user, config.SQL.password, {
-    host: config.SQL.host,
-    dialect: config.SQL.dialect,
+const sequelize = new Sequelize(config.development.database, config.development.username, config.development.password, {
+    host: config.development.host,
+    dialect: config.development.dialect,
     pool: {
         max: 5,
         min: 0,

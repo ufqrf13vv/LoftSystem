@@ -6,30 +6,46 @@ const sequelize = require('../../models/sql/connect.js');
 const User = require('../../models/sql/users.js')(sequelize);
 
 exports.getUsers = async (req, res) => {
-    const allUsers = await User.findUsers();
+    const allUsers = await User.findAll();
 
     res.send(allUsers);
 };
 
 exports.createUser = async (req, res) => {
-    const findUser = await User.findUser(req.body.username);
+    const findUser = await User.findOne({
+        where: { username: req.body.username }
+    });
 
     if (findUser) {
         return res.send({error: 'Пользователь с таким именем уже зарегистрирован в системе!'});
     }
 
-    const user = await User.saveUser(req.body);
+    const user = await User.create({
+        username: req.body.username,
+        password: helper.encryptPassword(req.body.password),
+        firstName: req.body.firstName,
+        surName: req.body.surName,
+        middleName: req.body.middleName,
+        image: req.body.img,
+        permission: req.body.permission,
+        permissionId: null,
+        access_token: ''
+    });
     const accessToken = helper.encodeJWT(user.id);
 
-    await User.updateUser(user.id, {access_token: accessToken, permissionId: user.id});
-    const updateUser = await User.findUserById(user.id);
+    await user.update({
+        access_token: accessToken,
+        permissionId: user.id
+    });
 
-    res.send(updateUser);
+    res.send(user);
 };
 
 exports.loginUser = async (req, res) => {
     const { username, password } = req.body;
-    const user = await User.findUser(username);
+    const user = await User.findOne({
+        where: { username: username }
+    });
     const accessToken = user.access_token;
 
     if (!user) return res.send({error: 'Пользователь с таким именем не найден!'});
@@ -50,7 +66,7 @@ exports.authFromToken = async (req, res) => {
 
     if (!decodedToken) return res.status(400).send({error: 'Невозможно раскодировать токен!'});
 
-    const user = await User.findUserById(decodedToken.id);
+    const user = await User.findById(decodedToken.id);
 
     if (!user) return res.status(400).send({error: 'Пользователь не найден!'});
 
@@ -58,8 +74,7 @@ exports.authFromToken = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
-    let data = req.body;
-    const user = await User.findUserById(req.body.id);
+    const user = await User.findById(req.body.id);
 
     if (!user) {
         return res.status(400).send({error: 'Такого пользователя не существует!'});
@@ -69,13 +84,12 @@ exports.updateUser = async (req, res) => {
         if (helper.checkPassword(req.body.password, user.password)) {
             return res.status(400).send({error: 'Новый и старый пароли не должны совпадать!'});
         }
-        data.password = helper.encryptPassword(req.body.password, user.password);
+        req.body.password = helper.encryptPassword(req.body.password, user.password);
     }
 
-    await User.updateUser(req.body.id, data);
-    const updateUser = await User.findUserById(req.body.id);
+    await user.update(req.body);
 
-    res.send(updateUser);
+    res.send(user);
 };
 
 exports.saveUserImage = async (req, res) => {
@@ -107,17 +121,16 @@ exports.saveUserImage = async (req, res) => {
         });
 
         const filePath = path.join('images', 'upload', files[id]['name']);
-        const user = await User.findUserById(id);
+        const user = await User.findById(id);
 
-        await User.updateUser(id, {image: filePath});
-        const updateUser = await User.findUserById(id);
+        await user.update({image: filePath});
 
-        res.send(updateUser);
+        res.send(user);
     });
 };
 
 exports.updateUserPermission = async (req, res) => {
-    const user = await User.findUserById(req.body.permissionId);
+    const user = await User.findById(req.body.permissionId);
 
     if (!user) return res.status(400).send({error: 'Пользователь не найден!'});
 
@@ -126,21 +139,21 @@ exports.updateUserPermission = async (req, res) => {
 
     for (const permissionName in newPermissions) {
         if (!newPermissions.hasOwnProperty(permissionName)) continue;
+
         Object.assign(oldPermissions[permissionName], newPermissions[permissionName]);
     }
 
-    await User.updateUser(user.id, {permission: oldPermissions});
+    await user.update({permission: oldPermissions});
 
-    res.send({status: 'ok'});
+    res.send(user);
 };
 
 exports.deleteUser = async (req, res) => {
     const id = req.params.id;
-    const user = await User.findUserById(id);
+    const user = await User.findById(id);
 
     if (user) {
-        await User.deleteUser(id);
-        console.log('User deleted.');
+        await User.destroy();
 
         return res.status(200);
     }

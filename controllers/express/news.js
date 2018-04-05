@@ -12,21 +12,35 @@ exports.getNews = async (req, res) => {
 };
 
 exports.newNews = async (req, res) => {
-    await News.addNews(req.body);
+    await News.create({
+        theme: req.body.theme,
+        text: req.body.text,
+        userId: req.body.userId,
+        date: req.body.date
+    });
     const allNews = await getAllNews();
 
     res.send(allNews);
 };
 
 exports.updateNews = async (req, res) => {
-    await News.updateNews(req.body, req.body.id);
+    await News.update(req.body,
+        {
+            where: {
+                id: req.body.id
+            }
+        });
     const allNews = await getAllNews();
 
     res.send(allNews);
 };
 
 exports.deleteNews = async (req, res) => {
-    await News.deleteNews(req.params.id);
+    await News.destroy({
+        where: {
+            id: req.params.id
+        }
+    });
     const allNews = await getAllNews();
 
     res.send(allNews);
