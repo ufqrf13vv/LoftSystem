@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const autoincrement = require('mongoose-easy-auto-increment');
 
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
@@ -12,19 +12,24 @@ const userSchema = new Schema({
         required: true
     },
     firstName: {
-        type: String
+        type: String,
+        default: ''
     },
     middleName: {
-        type: String
+        type: String,
+        default: ''
     },
     surName: {
-        type: String
+        type: String,
+        default: ''
     },
     image: {
-        type: String
+        type: String,
+        default: ''
     },
     permissionId: {
-        type: String
+        type: Number,
+        default: 0
     },
     permission: {
         chat: {
@@ -47,11 +52,15 @@ const userSchema = new Schema({
         }
     },
     access_token: {
-        type: String
+        type: String,
+        default: ''
     }
 }, {
     versionKey: false
 });
 
-const User = mongoose.model("User", userScheme);
-module.export = mongoose.model('User', userSchema);
+userSchema.plugin(autoincrement, { field: 'id', collection: 'users' });
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;

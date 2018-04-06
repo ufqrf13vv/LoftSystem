@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const newsSchema = new Schema({
+const newsSchema = new mongoose.Schema({
     text: {
         type: String
     },
@@ -18,4 +17,6 @@ const newsSchema = new Schema({
     versionKey: false
 });
 
-module.exports = mongoose.model('News', newsSchema);
+const News = mongoose.model('News', newsSchema);
+
+module.exports = News;
