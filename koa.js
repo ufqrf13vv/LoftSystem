@@ -9,6 +9,11 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 app.use(koaStatic(path.join(process.cwd() + '/public')));
+//app.use(async (ctx, next) => {
+//    //JSON.parse(ctx.request.body);
+//    console.log('qwert')
+//    next();
+//});
 app.use(router.routes());
 
 mongoose.connect('mongodb://localhost:27017/loft');

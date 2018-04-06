@@ -84,7 +84,7 @@ exports.updateUser = async (req, res) => {
         if (helper.checkPassword(req.body.password, user.password)) {
             return res.status(400).send({error: 'Новый и старый пароли не должны совпадать!'});
         }
-        req.body.password = helper.encryptPassword(req.body.password, user.password);
+        req.body.password = helper.encryptPassword(req.body.password);
     }
 
     await user.update(req.body);
