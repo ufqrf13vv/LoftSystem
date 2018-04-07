@@ -10,9 +10,9 @@ mongoose.Promise = global.Promise;
 
 app.use(koaStatic(path.join(process.cwd() + '/public')));
 //app.use(async (ctx, next) => {
-//    //JSON.parse(ctx.request.body);
-//    console.log('qwert')
-//    next();
+    //JSON.parse(ctx.request.body);
+    //console.log(typeof ctx.request.body)
+    //next();
 //});
 app.use(router.routes());
 

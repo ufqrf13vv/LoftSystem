@@ -1,11 +1,10 @@
 const User = require('../../models/mongo/users');
 const helper = require('../../helper/helper');
-const formidable = require('formidable');
 const path = require('path');
 const fs = require('fs');
 
 exports.getUsers = async ctx => {
-    const allUsers = await User.find();
+    const allUsers = await User.find().skip(1);
 
     ctx.body = allUsers;
 };
@@ -90,53 +89,58 @@ exports.updateUser = async ctx => {
         data.password = helper.encryptPassword(data.password);
     }
 
-    const updatedUser = await User.findByIdAndUpdate(user._id, data, {
-        new: true
-    });
+    const updatedUser = await User.findByIdAndUpdate(user._id, data, { new: true });
 
     ctx.body = updatedUser;
 };
 
 exports.saveUserImage = async ctx => {
-    //let id = req.params.id;
-    console.log(ctx.request.body.files[ctx.params.id.path])
-    const form = new formidable.IncomingForm();
+    const id = ctx.params.id;
     const upload = path.join(process.cwd(), 'public', 'images', 'upload');
-    let fileName = '';
+    const reqName = ctx.request.body.files[id]['name'];
+    const reqPath = ctx.request.body.files[id]['path'];
+    const fileName = path.join(upload, reqName);
 
-    //form.uploadDir = path.join(process.cwd(), upload);
-    //
-    //form.parse(req, async (err, fields, files) => {
-    //    if (err) {
-    //        return res.status(400).send({error: 'Ошибка загрузки файла!'});
-    //    }
-    //
-    //    fileName = path.join(upload, files[id]['name']);
-    //
-    //    fs.rename(files[id]['path'], fileName, err => {
-    //        if (err) {
-    //            console.log(err);
-    //
-    //            fs.unlink(fileName);
-    //            fs.rename(files[id]['path'], fileName);
-    //        }
-    //    });
-    //
-    //    const filePath = path.join('images', 'upload', files[id]['name']);
-    //    const user = await User.findById(id);
-    //
-    //    await user.update({image: filePath});
-    //
-    //    res.send(user);
-    //});
+    await fs.rename(reqPath, fileName, err => {
+        if (err) return ctx.throw(400, 'Ошибка!');
+    });
+
+    const filePath = path.join('images', 'upload', reqName);
+    const recUser = await User.findOne({ id: id }, (err, user) => {
+        if(err) return console.log(err);
+    });
+    const updatedUserImage = await User.findByIdAndUpdate(recUser._id, { image: filePath }, { new: true });
+
+    ctx.body = updatedUserImage;
 };
 
 exports.updateUserPermission = async ctx => {
+    const { permissionId, permission } = JSON.parse(ctx.request.body);
+    const user = await User.findOne({ id: permissionId});
 
+    if (!user) return res.status(400).send({error: 'Пользователь не найден!'});
+
+    const newPermissions = permission;
+    const oldPermissions = user.permission;
+
+    for (const permissionName in newPermissions) {
+        if (!newPermissions.hasOwnProperty(permissionName)) continue;
+
+        Object.assign(oldPermissions[permissionName], newPermissions[permissionName]);
+    }
+
+    const updatedUserPermissions = await User.findByIdAndUpdate(user._id, { permission: oldPermissions }, { new: true });
+
+    ctx.body = updatedUserPermissions;
 };
 
 exports.deleteUser = async ctx => {
+    const id = ctx.params.id;
+    const user = await User.findOneAndRemove({ id: id });
 
+    if (user) return ctx.status = 200;
+
+    ctx.status = 410;
 };
 
 
