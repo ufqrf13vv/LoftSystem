@@ -11,7 +11,7 @@ const newsSchema = new mongoose.Schema({
         type: String
     },
     userId: {
-        type: String
+        type: Number
     }
 }, {
     versionKey: false

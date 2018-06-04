@@ -4,9 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 exports.getUsers = async ctx => {
-    const allUsers = await User.find().skip(1);
-
-    ctx.body = allUsers;
+    ctx.body = await User.find().skip(1);
 };
 
 exports.createUser = async ctx => {
@@ -30,14 +28,13 @@ exports.createUser = async ctx => {
     });
 
     const accessToken = helper.encodeJWT(user.id);
-    const userUpdate = await User.findByIdAndUpdate(user._id, {
+
+    ctx.body = await User.findByIdAndUpdate(user._id, {
         access_token: accessToken,
         permissionId: user.id
     }, {
         new: true
     });
-
-    ctx.body = userUpdate;
 };
 
 exports.loginUser = async ctx => {
@@ -89,9 +86,7 @@ exports.updateUser = async ctx => {
         data.password = helper.encryptPassword(data.password);
     }
 
-    const updatedUser = await User.findByIdAndUpdate(user._id, data, { new: true });
-
-    ctx.body = updatedUser;
+    ctx.body = await User.findByIdAndUpdate(user._id, data, { new: true });
 };
 
 exports.saveUserImage = async ctx => {
@@ -109,9 +104,8 @@ exports.saveUserImage = async ctx => {
     const recUser = await User.findOne({ id: id }, (err, user) => {
         if(err) return console.log(err);
     });
-    const updatedUserImage = await User.findByIdAndUpdate(recUser._id, { image: filePath }, { new: true });
 
-    ctx.body = updatedUserImage;
+    ctx.body = await User.findByIdAndUpdate(recUser._id, { image: filePath }, { new: true });
 };
 
 exports.updateUserPermission = async ctx => {
@@ -129,9 +123,7 @@ exports.updateUserPermission = async ctx => {
         Object.assign(oldPermissions[permissionName], newPermissions[permissionName]);
     }
 
-    const updatedUserPermissions = await User.findByIdAndUpdate(user._id, { permission: oldPermissions }, { new: true });
-
-    ctx.body = updatedUserPermissions;
+    ctx.body = await User.findByIdAndUpdate(user._id, { permission: oldPermissions }, { new: true });
 };
 
 exports.deleteUser = async ctx => {

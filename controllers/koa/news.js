@@ -1,15 +1,24 @@
 const News = require('../../models/mongo/news');
-const User = require('../../models/mongo/users');
+
+getAllNews = async () => {
+    const allNews = await News.aggregate([
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'userId',
+                foreignField: 'permissionId',
+                as: 'user'
+            }
+        }
+    ]);
+
+    return allNews.map(item => {
+        return {...item, id: item._id, user: item.user[0]};
+    });
+};
 
 exports.getNews = async ctx => {
-    const allNews = await News.find();
-    const user = await User.findOne({permissionId: 18});
-    const all = allNews[0];
-    let obj = {all, user: user};
-    const arr = [all];
-    console.log(arr);
-
-    ctx.body = obj;
+    ctx.body = await getAllNews();
 };
 
 exports.newNews = async ctx => {
@@ -18,21 +27,23 @@ exports.newNews = async ctx => {
     await News.create({
         theme: data.theme,
         text: data.text,
-        userId: data.userId,
+        userId: Number(data.userId),
         date: data.date
     });
 
-    const allNews = await News.find();
-
-    //ctx.body = allNews;
+    ctx.body = await getAllNews();
 };
 
 exports.updateNews = async ctx => {
+    await News.findByIdAndUpdate(ctx.params.id, JSON.parse(ctx.request.body));
 
+    ctx.body = await getAllNews();
 };
 
 exports.deleteNews = async ctx => {
+    await News.findByIdAndRemove(ctx.params.id);
 
+    ctx.body = await getAllNews();
 };
 
 
