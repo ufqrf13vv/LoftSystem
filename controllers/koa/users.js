@@ -59,8 +59,7 @@ exports.loginUser = async ctx => {
 };
 
 exports.authFromToken = async ctx => {
-    const access_token = ctx.request.body.access_token;
-    const decodedToken = helper.decodeJWT(access_token);
+    const decodedToken = helper.decodeJWT(ctx.request.body.access_token);
 
     if (!decodedToken) return ctx.throw(400, 'Невозможно раскодировать токен!');
 

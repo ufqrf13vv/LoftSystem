@@ -62,7 +62,7 @@ exports.loginUser = async (req, res) => {
 };
 
 exports.authFromToken = async (req, res) => {
-    let decodedToken = helper.decodeJWT(req.body.access_token);
+    const decodedToken = helper.decodeJWT(req.body.access_token);
 
     if (!decodedToken) return res.status(400).send({error: 'Невозможно раскодировать токен!'});
 
